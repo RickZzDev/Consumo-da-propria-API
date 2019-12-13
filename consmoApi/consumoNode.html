@@ -1,0 +1,225 @@
+
+    
+<!DOCTYPE html>
+<html>
+
+<head>
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>CRUD-Contatos - MVC</title>
+<script>
+   
+</script>
+</head>
+
+<body>
+
+<div id="principal">
+	<div id="cabecalho">
+		<img src="imagens/mvc.jpg" width="980" height="200">
+    </div>
+
+    <div id="content">
+    	<div id="cadastro">
+        	
+            <form name="frmcontatos" method="post" action="" >
+            
+                <table id="tblcadastro">
+                  <tr>
+                    <td colspan="2" class="titulo_tabela">Cadastro de Contatos</td>
+                  </tr>
+                  <tr>
+                    <td class="tblcadastro_td">Nome:</td>
+                    <td><input placeholder="Digite seu nome"  id="txtnome" type="text" value=""    /></td>
+                  </tr>
+                  <tr>
+                    <td class="tblcadastro_td">Quantidade:</td>
+                    <td><input id="txtQuantidade" placeholder="Ex:999 9999-9999"   name="txttelefone" type="text" value=""   /></td>
+                  </tr>
+                  <tr>
+                    <td class="tblcadastro_td">Imagem</td>
+                    <td><input  id="txtImagem" type="text" value=""  /></td>
+                  </tr>
+                  <tr>
+                    <td><input name="btnsalvar" id="btnGeral" type="button" value="" /></td>
+                    <td></td>
+                  </tr>
+                    
+                    
+                </table>
+               
+            
+            </form>
+
+        </div>
+        
+        <div id="consulta">
+        	<table id="tblconsulta">
+              <tr>
+                <td class="titulo_tabela" colspan="6">Consulta de Contatos</td>
+              </tr>
+              <tr class="tblcadastro_td">
+                <td>Nome</td>
+                <td>Quantidade</td>
+                <td>imagem</td>
+
+                <td>Opções</td>
+              </tr>
+                
+            
+           
+              <!-- <tr id="tblconsulta_dados">
+                <td></td>
+                <td></td>
+                <td></td>
+
+                <td>
+                  <img src="icones/Modify16.png">
+                  | 
+                  <img src="icones/Delete16.png">
+                  | 
+                  <img src="icones/consulta.png" width="24" height="24">
+                </td>
+              </tr> -->
+                
+      
+           
+            </table>
+        </div>    
+        
+           
+    </div>
+    
+    <div id="rodape">
+    
+    </div>
+    
+</div>
+<script>
+
+
+    const url = "http://localhost:3000/produtos";
+
+
+
+      function clickDelete(codigo){
+        
+          const dadosExcluir = {
+          'id': codigo
+          }
+          const url =`http://localhost:3000/produtos/${codigo}`;
+
+          const options = {
+            method: "delete",
+             body: JSON.stringify(dadosExcluir)
+          }
+
+          fetch(url,options).then(resposta=>resposta.json()).then(data=>console.log(data));
+          
+          window.location.reload();
+   
+    }
+
+
+    let $botao = document.getElementById('btnGeral');
+
+    function insereCadastro(){
+      $nome = document.getElementById('txtnome');
+      $quantidade = document.getElementById('txtQuantidade');
+      $imagem = document.getElementById('txtImagem');
+      
+      
+      $excluir = document.getElementById('excluir');
+     $excluir.addEventListener('click', alert('a'))
+
+      
+
+      $nomeReal = $nome.value;
+      $quantidadeReal = $quantidade.value;
+      $imagemReal = $imagem.value;
+
+      function insereNoBanco(dados){
+        console.log($nomeReal);
+        const url =`http://localhost:3000/produtos/${$nomeReal}/${$quantidadeReal}`;
+
+        const option = {
+          method: "post",
+          body: JSON.stringify(dados)
+        }
+
+        fetch(url,option).then(resposta=>resposta.json()).then(data=>console.log(data));
+
+        window.location.reload();
+        
+      }
+
+     const  dados = {
+       "nome": $nomeReal,
+       "quantidade":$quantidadeReal,
+       "imagem": $imagemReal
+     }
+
+     insereNoBanco(dados);
+      
+      console.log(dados);
+  
+    }
+
+    $botao.addEventListener('click',()=> insereCadastro());
+
+    $div = document.getElementById('tblconsulta');
+
+
+
+
+
+
+
+
+    function mostraTudo(){
+
+     fetch(url).then(url=>url.json()).then(json=>{
+        $resposta = json;
+        console.log($resposta);
+            
+      
+
+      for(i=0;i<$resposta.length;i++){
+        
+        let tableConsulta  = `
+                <td>${$resposta[i].nome}</td>
+                <td>${$resposta[i].quantidade}</td>
+                <td>${$resposta[i].imagem}</td>
+           
+
+                <td>
+                  <img src="icones/Modify16.png">
+                  |
+                  <td onclick="clickDelete(${$resposta[i].id})" value="4"> 
+                  <img src="icones/Delete16.png">
+                  </td>
+
+                  <td>
+                  <img src="icones/consulta.png" width="24" height="24">
+                  </td>
+                </td>`
+
+                $div.innerHTML += tableConsulta;
+      }
+     
+     });
+
+    }
+
+
+
+     mostraTudo()
+    
+</script>    
+</body>
+</html>
+
+
+
+	
+
